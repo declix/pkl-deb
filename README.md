@@ -9,12 +9,14 @@ pkl-deb provides type-safe configuration templates for Debian/Ubuntu package man
 
 ## Installation
 
-Add to your `PklProject`:
+For installation instructions and usage examples, see the **[latest release notes](https://github.com/declix/pkl-deb/releases/latest)**.
+
+Quick start - Add to your `PklProject`:
 
 ```pkl
 dependencies {
     ["pkl-deb"] {
-        uri = "package://pkl.declix.org/pkl-deb@0.0.0"
+        uri = "package://pkl.declix.org/pkl-deb@X.Y.Z"
     }
 }
 ```
@@ -26,7 +28,7 @@ dependencies {
 Create APT repository configurations:
 
 ```pkl
-import "package://pkl.declix.org/pkl-deb@0.0.0#/SourcesList.pkl"
+import "package://pkl.declix.org/pkl-deb@X.Y.Z#/SourcesList.pkl"
 
 // Basic Debian repository
 new SourcesList.Entry {
