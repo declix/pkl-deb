@@ -14,7 +14,7 @@ Add to your `PklProject`:
 ```pkl
 dependencies {
     ["pkl-deb"] {
-        uri = "package://pkl.declix.org/pkl-deb@0.1.0"
+        uri = "package://pkl.declix.org/pkl-deb@0.0.0"
     }
 }
 ```
@@ -26,7 +26,7 @@ dependencies {
 Create APT repository configurations:
 
 ```pkl
-import "package://pkl.declix.org/pkl-deb@0.1.0#/SourcesList.pkl"
+import "package://pkl.declix.org/pkl-deb@0.0.0#/SourcesList.pkl"
 
 // Basic Debian repository
 new SourcesList.Entry {

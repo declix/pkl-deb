@@ -1,0 +1,30 @@
+{
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        [
+            "@semantic-release/release-notes-generator",
+            {
+                "preset": "conventionalcommits",
+                "writerOpts": {
+                    "headerPartial": "## pkl-deb {{#if isPatch~}} <small>\n  {{~/if~}} {{version}}\n  {{~#if title}} \"{{title}}\"\n  {{~/if~}}\n  {{~#if date}} ({{date}})\n  {{~/if~}}\n  {{~#if isPatch~}} </small>\n  {{~/if}}\n\nThis is the {{version}} release of pkl-deb - declarative Debian package repository configuration using Pkl.\n\n## Installation\n\n### Option 1: PklProject Dependencies (Recommended)\n\nAdd to your `PklProject` dependencies:\n\n```\ndependencies {\n    [\"deb\"] = \"package://pkl.declix.org/pkl-deb@{{version}}\"\n}\n```\n\nThen import with short syntax:\n\n```pkl\nimport \"@deb/SourcesList.pkl\"\n```\n\n### Option 2: Direct Import\n\n```pkl\n// sources.list configuration\namends \"package://pkl.declix.org/pkl-deb@{{version}}#/SourcesList.pkl\"\n\n// or import for use in other modules\nimport \"package://pkl.declix.org/pkl-deb@{{version}}#/SourcesList.pkl\"\n```\n\n"
+                }
+            }
+        ],
+        [
+            "@semantic-release/exec",
+            {
+                "publishCmd": "just release ${nextRelease.version}"
+            }
+        ],
+        [
+            "@semantic-release/github",
+            {
+                "assets": [
+                    "dist/**"
+                ]
+            }
+        ]
+    ],
+    "tagFormat": "${version}",
+    "preset": "conventionalcommits"
+}
