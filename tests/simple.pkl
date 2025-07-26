@@ -1,0 +1,19 @@
+/// Simple tests for SourcesList module
+amends "pkl:test"
+
+import "../SourcesList.pkl"
+
+examples {
+    ["Basic Debian sources.list"] {
+        new SourcesList.SourcesList {
+            entries = new Listing {
+                new SourcesList.Entry {
+                    archiveType = "deb"
+                    uri = "http://deb.debian.org/debian"
+                    suite = "bookworm"
+                    components = new Listing { "main" }
+                }
+            }
+        }
+    }
+}

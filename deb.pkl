@@ -1,0 +1,6 @@
+/// Re-export module for pkl-deb
+/// 
+/// This module provides convenient access to all pkl-deb functionality.
+module pkl.deb
+
+export { SourcesList }

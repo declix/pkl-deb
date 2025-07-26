@@ -1,0 +1,88 @@
+/// Pkl module for generating Debian sources.list files
+/// 
+/// This module provides types and utilities for creating valid Debian package
+/// repository configurations in sources.list format.
+/// 
+/// Reference: https://manpages.debian.org/bookworm/apt/sources.list.5.en.html
+module pkl.deb.SourcesList
+
+/// Archive type for the repository
+typealias ArchiveType = "deb"|"deb-src"
+
+/// Supported URI schemes  
+typealias UriScheme = "http"|"https"|"file"|"ftp"|"cdrom"|"copy"|"rsh"|"ssh"|"mirror"
+
+/// Common Debian components
+typealias Component = "main"|"contrib"|"non-free"|"non-free-firmware"|String
+
+/// Options that can be specified for a repository entry
+class EntryOptions {
+    /// Architectures to enable (e.g., "amd64", "i386")
+    architectures: Listing<String>?
+    
+    /// Languages for translation files
+    languages: Listing<String>?
+    
+    /// Targets to download (e.g., "Packages", "Sources")
+    targets: Listing<String>?
+    
+    /// Whether to use PDiff files for incremental updates
+    pdiffs: Boolean?
+    
+    /// Trusted GPG key for repository verification
+    signedBy: String?
+    
+    /// Whether the repository is trusted without signature verification
+    trusted: Boolean?
+    
+    /// Render options as string for one-line format
+    function render(): String = 
+        let (opts = new Listing {
+            when (architectures != null) { "arch=\(architectures!!.join(","))" }
+            when (languages != null) { "lang=\(languages!!.join(","))" }
+            when (targets != null) { "target=\(targets!!.join(","))" }
+            when (pdiffs != null) { "pdiffs=\(if (pdiffs!!) "yes" else "no")" }
+            when (signedBy != null) { "signed-by=\(signedBy!!)" }
+            when (trusted != null) { "trusted=\(if (trusted!!) "yes" else "no")" }
+        })
+        if (opts.isEmpty) "" else "[\(opts.join(" "))] "
+}
+
+/// A single repository entry in sources.list format
+class Entry {
+    /// Archive type (deb or deb-src)
+    archiveType: ArchiveType = "deb"
+    
+    /// Repository options
+    options: EntryOptions?
+    
+    /// Repository URI
+    uri: String
+    
+    /// Distribution suite (e.g., "bookworm", "stable")
+    suite: String
+    
+    /// Package components (e.g., main, contrib, non-free)
+    components: Listing<Component> = new Listing { "main" }
+    
+    /// Render as one-line sources.list entry
+    function render(): String = 
+        let (optsStr = options?.render() ?? "")
+        "\(archiveType) \(optsStr)\(uri) \(suite) \(components.join(" "))"
+}
+
+/// Complete sources.list file configuration
+class SourcesList {
+    /// List of repository entries
+    entries: Listing<Entry>
+    
+    /// Render complete sources.list file content
+    output {
+        text = new Listing {
+            for (entry in entries) {
+                entry.render()
+            }
+        }.join("\n") + "\n"
+    }
+}
+

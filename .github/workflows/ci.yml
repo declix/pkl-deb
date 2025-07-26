@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install mise
+      uses: jdx/mise-action@v2
+      with:
+        version: 2024.1.0
+    
+    - name: Install dependencies
+      run: mise install
+    
+    - name: Run tests
+      run: just test
+    
+    - name: Package
+      run: just package
+
+  release:
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'chore: release')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install mise
+      uses: jdx/mise-action@v2
+      with:
+        version: 2024.1.0
+    
+    - name: Install dependencies
+      run: mise install
+    
+    - name: Package
+      run: just package
+    
+    - name: Get version from PklProject
+      id: version
+      run: |
+        VERSION=$(pkl eval -p package.version PklProject)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.version.outputs.version }}
+        name: Release ${{ steps.version.outputs.version }}
+        files: dist/*
+        generate_release_notes: true

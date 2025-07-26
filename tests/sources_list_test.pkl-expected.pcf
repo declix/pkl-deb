@@ -1,0 +1,250 @@
+examples {
+  ["Basic entry"] {
+    new {
+      archiveType = "deb"
+      options = null
+      uri = "http://deb.debian.org/debian"
+      suite = "bookworm"
+      components {
+        "main"
+      }
+    }
+  }
+  ["Entry with multiple components"] {
+    new {
+      archiveType = "deb"
+      options = null
+      uri = "http://deb.debian.org/debian"
+      suite = "bookworm"
+      components {
+        "main"
+        "contrib"
+        "non-free"
+      }
+    }
+  }
+  ["Source repository entry"] {
+    new {
+      archiveType = "deb-src"
+      options = null
+      uri = "http://deb.debian.org/debian"
+      suite = "bookworm"
+      components {
+        "main"
+      }
+    }
+  }
+  ["Entry with architecture option"] {
+    new {
+      archiveType = "deb"
+      options {
+        architectures {
+          "amd64"
+          "i386"
+        }
+        languages = null
+        targets = null
+        pdiffs = null
+        signedBy = null
+        trusted = null
+      }
+      uri = "http://deb.debian.org/debian"
+      suite = "bookworm"
+      components {
+        "main"
+      }
+    }
+  }
+  ["Entry with multiple options"] {
+    new {
+      archiveType = "deb"
+      options {
+        architectures {
+          "amd64"
+        }
+        languages = null
+        targets = null
+        pdiffs = null
+        signedBy = "/usr/share/keyrings/example.gpg"
+        trusted = true
+      }
+      uri = "http://example.com/debian"
+      suite = "bookworm"
+      components {
+        "main"
+      }
+    }
+  }
+  ["Entry with PDiffs disabled"] {
+    new {
+      archiveType = "deb"
+      options {
+        architectures = null
+        languages = null
+        targets = null
+        pdiffs = false
+        signedBy = null
+        trusted = null
+      }
+      uri = "http://deb.debian.org/debian"
+      suite = "bookworm"
+      components {
+        "main"
+      }
+    }
+  }
+  ["Basic Debian sources.list"] {
+    new {
+      entries {
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://deb.debian.org/debian"
+          suite = "bookworm"
+          components {
+            "main"
+            "contrib"
+            "non-free"
+          }
+        }
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://deb.debian.org/debian"
+          suite = "bookworm-updates"
+          components {
+            "main"
+            "contrib"
+            "non-free"
+          }
+        }
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://security.debian.org/debian-security"
+          suite = "bookworm-security"
+          components {
+            "main"
+            "contrib"
+            "non-free"
+          }
+        }
+      }
+      output {
+        text = """
+          deb http://deb.debian.org/debian bookworm main contrib non-free
+          deb http://deb.debian.org/debian bookworm-updates main contrib non-free
+          deb http://security.debian.org/debian-security bookworm-security main contrib non-free
+          
+          """
+      }
+    }
+  }
+  ["Ubuntu sources.list with options"] {
+    new {
+      entries {
+        new {
+          archiveType = "deb"
+          options {
+            architectures {
+              "amd64"
+            }
+            languages = null
+            targets = null
+            pdiffs = null
+            signedBy = null
+            trusted = null
+          }
+          uri = "http://archive.ubuntu.com/ubuntu"
+          suite = "jammy"
+          components {
+            "main"
+            "restricted"
+          }
+        }
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://security.ubuntu.com/ubuntu"
+          suite = "jammy-security"
+          components {
+            "main"
+            "restricted"
+          }
+        }
+      }
+      output {
+        text = """
+          deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy main restricted
+          deb http://security.ubuntu.com/ubuntu jammy-security main restricted
+          
+          """
+      }
+    }
+  }
+  ["Mixed source and binary repositories"] {
+    new {
+      entries {
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://deb.debian.org/debian"
+          suite = "sid"
+          components {
+            "main"
+            "contrib"
+            "non-free"
+          }
+        }
+        new {
+          archiveType = "deb-src"
+          options = null
+          uri = "http://deb.debian.org/debian"
+          suite = "sid"
+          components {
+            "main"
+            "contrib"
+            "non-free"
+          }
+        }
+      }
+      output {
+        text = """
+          deb http://deb.debian.org/debian sid main contrib non-free
+          deb-src http://deb.debian.org/debian sid main contrib non-free
+          
+          """
+      }
+    }
+  }
+  ["Docker repository with signing key"] {
+    new {
+      entries {
+        new {
+          archiveType = "deb"
+          options {
+            architectures {
+              "amd64"
+            }
+            languages = null
+            targets = null
+            pdiffs = null
+            signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
+            trusted = null
+          }
+          uri = "https://download.docker.com/linux/debian"
+          suite = "bookworm"
+          components {
+            "stable"
+          }
+        }
+      }
+      output {
+        text = """
+          deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian bookworm stable
+          
+          """
+      }
+    }
+  }
+}

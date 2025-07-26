@@ -1,0 +1,23 @@
+examples {
+  ["Basic Debian sources.list"] {
+    new {
+      entries {
+        new {
+          archiveType = "deb"
+          options = null
+          uri = "http://deb.debian.org/debian"
+          suite = "bookworm"
+          components {
+            "main"
+          }
+        }
+      }
+      output {
+        text = """
+          deb http://deb.debian.org/debian bookworm main
+          
+          """
+      }
+    }
+  }
+}

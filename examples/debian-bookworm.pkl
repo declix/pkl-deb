@@ -1,0 +1,36 @@
+/// Example: Standard Debian Bookworm sources.list
+amends "package://pkl.declix.org/pkl-deb@0.1.0#/SourcesList.pkl"
+
+entries = new Listing {
+    // Main Debian repository
+    new Entry {
+        archiveType = "deb"
+        uri = "http://deb.debian.org/debian"
+        suite = "bookworm"
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Updates repository
+    new Entry {
+        archiveType = "deb"
+        uri = "http://deb.debian.org/debian"
+        suite = "bookworm-updates"
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Security updates
+    new Entry {
+        archiveType = "deb"
+        uri = "http://security.debian.org/debian-security"
+        suite = "bookworm-security"
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Backports repository (commented out by default)
+    // new Entry {
+    //     archiveType = "deb"
+    //     uri = "http://deb.debian.org/debian"
+    //     suite = "bookworm-backports"
+    //     components = new Listing { "main"; "contrib"; "non-free" }
+    // }
+}

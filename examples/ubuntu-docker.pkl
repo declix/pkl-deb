@@ -1,0 +1,38 @@
+/// Example: Ubuntu with Docker repository
+amends "package://pkl.declix.org/pkl-deb@0.1.0#/SourcesList.pkl"
+
+entries = new Listing {
+    // Ubuntu main repositories
+    new Entry {
+        archiveType = "deb"
+        uri = "http://archive.ubuntu.com/ubuntu"
+        suite = "jammy"
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    new Entry {
+        archiveType = "deb"
+        uri = "http://archive.ubuntu.com/ubuntu"
+        suite = "jammy-updates"
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    new Entry {
+        archiveType = "deb"
+        uri = "http://security.ubuntu.com/ubuntu"
+        suite = "jammy-security"
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    // Docker CE repository
+    new Entry {
+        archiveType = "deb"
+        options = new EntryOptions {
+            architectures = new Listing { "amd64" }
+            signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
+        }
+        uri = "https://download.docker.com/linux/ubuntu"
+        suite = "jammy"
+        components = new Listing { "stable" }
+    }
+}
