@@ -1,0 +1,121 @@
+/// Module for generating Debian .sources files in deb822 format
+/// 
+/// This module can be amended to create .sources file configurations.
+/// Set the entries property to define your repository entries.
+/// 
+/// Reference: https://manpages.debian.org/bookworm/apt/sources.list.5.en.html
+module pkl.deb.Sources
+
+import "Deb822.pkl"
+import "Types.pkl"
+
+/// Re-export common types for convenience
+typealias ArchiveType = Types.ArchiveType
+typealias UriScheme = Types.UriScheme
+typealias Component = Types.Component
+
+/// A source repository entry in deb822 format
+class Entry {
+    /// Package types (deb, deb-src) - can be single or multiple
+    types: Listing<ArchiveType> = new Listing { "deb" }
+    
+    /// Repository URIs - can be single or multiple
+    uris: Listing<String>
+    
+    /// Distribution suites - can be single or multiple
+    suites: Listing<String>
+    
+    /// Package components
+    components: Listing<Component> = new Listing { "main" }
+    
+    /// Architectures to download (optional)
+    architectures: Listing<String>?
+    
+    /// Languages for translation files (optional)
+    languages: Listing<String>?
+    
+    /// Targets to download (optional)
+    targets: Listing<String>?
+    
+    /// Whether to use PDiff files for incremental updates (optional)
+    pdiffs: Boolean?
+    
+    /// GPG keys for repository verification (optional)
+    signedBy: String?
+    
+    /// Whether to check Valid-Until header (optional)
+    checkValidUntil: Boolean?
+    
+    /// Whether this entry is enabled (optional, defaults to true)
+    enabled: Boolean?
+    
+    /// Whether the repository is trusted without signature verification (optional)
+    trusted: Boolean?
+    
+    /// Additional custom fields
+    customFields: Mapping<String, String>?
+    
+    /// Convert entry to a deb822 stanza
+    function toStanza(): Deb822.Stanza = new Deb822.Stanza {
+        fields = new Listing {
+            // Required fields
+            Deb822.listField("Types", types)
+            Deb822.listField("URIs", uris)
+            Deb822.listField("Suites", suites)
+            Deb822.listField("Components", components)
+            
+            // Optional fields
+            when (architectures != null) {
+                Deb822.listField("Architectures", architectures!!)
+            }
+            when (languages != null) {
+                Deb822.listField("Languages", languages!!)
+            }
+            when (targets != null) {
+                Deb822.listField("Targets", targets!!)
+            }
+            when (pdiffs != null) {
+                Deb822.booleanField("PDiffs", pdiffs!!)
+            }
+            when (signedBy != null) {
+                Deb822.field("Signed-By", signedBy!!)
+            }
+            when (checkValidUntil != null) {
+                Deb822.booleanField("Check-Valid-Until", checkValidUntil!!)
+            }
+            when (enabled != null) {
+                Deb822.booleanField("Enabled", enabled!!)
+            }
+            when (trusted != null) {
+                Deb822.booleanField("Trusted", trusted!!)
+            }
+            
+            // Custom fields
+            when (customFields != null) {
+                for (fieldName, fieldValue in customFields!!) {
+                    Deb822.field(fieldName, fieldValue)
+                }
+            }
+        }
+    }
+    
+    /// Render entry in deb822 format
+    function render(): String = toStanza().render()
+}
+
+/// List of repository entries
+entries: Listing<Entry> = new Listing {}
+
+/// Optional header comment
+headerComment: String?
+
+/// Render complete .sources file content
+output {
+    text = 
+        let (myEntries = entries)
+        let (myHeaderComment = headerComment)
+        (new Deb822.Document {
+            headerComment = myHeaderComment
+            stanzas = myEntries.toList().map((entry) -> entry.toStanza()).toListing()
+        }).output.text
+}

@@ -1,0 +1,35 @@
+/// Example: Standard Debian Bookworm .sources file
+amends "../Sources.pkl"
+
+headerComment = "Debian Bookworm repository configuration"
+
+entries = new Listing {
+    // Main Debian repository
+    new Entry {
+        uris = new Listing { "http://deb.debian.org/debian" }
+        suites = new Listing { "bookworm" }
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Updates repository
+    new Entry {
+        uris = new Listing { "http://deb.debian.org/debian" }
+        suites = new Listing { "bookworm-updates" }
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Security updates
+    new Entry {
+        uris = new Listing { "http://security.debian.org/debian-security" }
+        suites = new Listing { "bookworm-security" }
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }
+    
+    // Backports repository (disabled by default)
+    new Entry {
+        uris = new Listing { "http://deb.debian.org/debian" }
+        suites = new Listing { "bookworm-backports" }
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+        enabled = false
+    }
+}

@@ -1,0 +1,35 @@
+/// Example: Ubuntu with Docker repository in .sources format
+amends "../Sources.pkl"
+
+headerComment = "Ubuntu Jammy with Docker CE repository"
+
+entries = new Listing {
+    // Ubuntu main repositories
+    new Entry {
+        uris = new Listing { "http://archive.ubuntu.com/ubuntu" }
+        suites = new Listing { "jammy" }
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    new Entry {
+        uris = new Listing { "http://archive.ubuntu.com/ubuntu" }
+        suites = new Listing { "jammy-updates" }
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    new Entry {
+        uris = new Listing { "http://security.ubuntu.com/ubuntu" }
+        suites = new Listing { "jammy-security" }
+        components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+    }
+    
+    // Docker CE repository
+    new Entry {
+        uris = new Listing { "https://download.docker.com/linux/ubuntu" }
+        suites = new Listing { "jammy" }
+        components = new Listing { "stable" }
+        architectures = new Listing { "amd64" }
+        signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
+        trusted = false
+    }
+}

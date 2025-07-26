@@ -1,0 +1,92 @@
+/// Tests for Sources module
+amends "pkl:test"
+
+import "../Sources.pkl"
+
+examples {
+  ["Simple Debian entry"] {
+    new Sources.Entry {
+      uris = new Listing { "http://deb.debian.org/debian" }
+      suites = new Listing { "bookworm" }
+      components = new Listing { "main"; "contrib"; "non-free" }
+    }
+  }
+  
+  ["Ubuntu with architecture"] {
+    new Sources.Entry {
+      types = new Listing { "deb"; "deb-src" }
+      uris = new Listing { "http://archive.ubuntu.com/ubuntu" }
+      suites = new Listing { "jammy" }
+      components = new Listing { "main"; "restricted"; "universe"; "multiverse" }
+      architectures = new Listing { "amd64" }
+    }
+  }
+  
+  ["Docker repository with signed-by"] {
+    new Sources.Entry {
+      uris = new Listing { "https://download.docker.com/linux/debian" }
+      suites = new Listing { "bookworm" }
+      components = new Listing { "stable" }
+      architectures = new Listing { "amd64" }
+      signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
+      trusted = false
+    }
+  }
+  
+  ["Complete sources file output"] {
+    new Sources.Entry {
+      uris = new Listing { "http://deb.debian.org/debian" }
+      suites = new Listing { "bookworm" }
+      components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+    }.render()
+  }
+  
+  ["Disabled entry"] {
+    new Sources.Entry {
+      uris = new Listing { "http://deb.debian.org/debian" }
+      suites = new Listing { "bookworm-backports" }
+      components = new Listing { "main" }
+      enabled = false
+    }
+  }
+  
+  ["Multi-URI and multi-suite"] {
+    new Sources.Entry {
+      uris = new Listing { 
+        "http://deb.debian.org/debian"
+        "http://ftp.debian.org/debian"
+      }
+      suites = new Listing { "bookworm"; "bookworm-updates" }
+      components = new Listing { "main" }
+    }
+  }
+  
+  ["With custom fields"] {
+    new Sources.Entry {
+      uris = new Listing { "http://example.com/repo" }
+      suites = new Listing { "stable" }
+      components = new Listing { "main" }
+      customFields = new Mapping {
+        ["Priority"] = "500"
+        ["Description"] = "Custom repository"
+      }
+    }
+  }
+  
+  ["Entry with all fields"] {
+    new Sources.Entry {
+      types = new Listing { "deb"; "deb-src" }
+      uris = new Listing { "http://deb.debian.org/debian" }
+      suites = new Listing { "bookworm" }
+      components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+      architectures = new Listing { "amd64"; "arm64" }
+      languages = new Listing { "en"; "de" }
+      targets = new Listing { "Packages"; "Sources" }
+      pdiffs = true
+      signedBy = "/usr/share/keyrings/debian-archive-keyring.gpg"
+      checkValidUntil = false
+      enabled = true
+      trusted = false
+    }
+  }
+}

@@ -1,5 +1,5 @@
 /// Example: Standard Debian Bookworm sources.list
-amends "package://pkl.declix.org/pkl-deb@X.Y.Z#/SourcesList.pkl"
+amends "../SourcesList.pkl"
 
 entries = new Listing {
     // Main Debian repository

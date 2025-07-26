@@ -1,0 +1,273 @@
+examples {
+  ["Simple field"] {
+    new {
+      name = "Name"
+      value = "value"
+      multiline = false
+    }
+  }
+  ["Boolean field true"] {
+    new {
+      name = "Enabled"
+      value = "yes"
+      multiline = false
+    }
+  }
+  ["Boolean field false"] {
+    new {
+      name = "Trusted"
+      value = "no"
+      multiline = false
+    }
+  }
+  ["List field"] {
+    new {
+      name = "Components"
+      value = "main contrib non-free"
+      multiline = false
+    }
+  }
+  ["Multiline field"] {
+    new {
+      name = "Description"
+      value = """
+        This is a long description
+        that spans multiple lines
+        and preserves formatting
+        """
+      multiline = true
+    }
+  }
+  ["Field with continuation line"] {
+    new {
+      name = "Long-Field"
+      value = """
+        This is a very long value that might
+        span across multiple lines
+        """
+      multiline = false
+    }
+  }
+  ["Simple stanza"] {
+    new {
+      fields {
+        new {
+          name = "Types"
+          value = "deb"
+          multiline = false
+        }
+        new {
+          name = "URIs"
+          value = "http://deb.debian.org/debian"
+          multiline = false
+        }
+        new {
+          name = "Suites"
+          value = "bookworm"
+          multiline = false
+        }
+        new {
+          name = "Components"
+          value = "main contrib"
+          multiline = false
+        }
+      }
+    }
+  }
+  ["Stanza with optional fields"] {
+    new {
+      fields {
+        new {
+          name = "Types"
+          value = "deb"
+          multiline = false
+        }
+        new {
+          name = "URIs"
+          value = "https://download.docker.com/linux/debian"
+          multiline = false
+        }
+        new {
+          name = "Suites"
+          value = "bookworm"
+          multiline = false
+        }
+        new {
+          name = "Components"
+          value = "stable"
+          multiline = false
+        }
+        new {
+          name = "Architectures"
+          value = "amd64"
+          multiline = false
+        }
+        new {
+          name = "Signed-By"
+          value = "/usr/share/keyrings/docker-archive-keyring.gpg"
+          multiline = false
+        }
+        new {
+          name = "Trusted"
+          value = "no"
+          multiline = false
+        }
+      }
+    }
+  }
+  ["Document with single stanza"] {
+    new {
+      stanzas {
+        new {
+          fields {
+            new {
+              name = "Types"
+              value = "deb"
+              multiline = false
+            }
+            new {
+              name = "URIs"
+              value = "http://deb.debian.org/debian"
+              multiline = false
+            }
+            new {
+              name = "Suites"
+              value = "bookworm"
+              multiline = false
+            }
+            new {
+              name = "Components"
+              value = "main"
+              multiline = false
+            }
+          }
+        }
+      }
+      headerComment = null
+      output {
+        text = """
+          Types: deb
+          URIs: http://deb.debian.org/debian
+          Suites: bookworm
+          Components: main
+          
+          """
+      }
+    }
+  }
+  ["Document with multiple stanzas"] {
+    new {
+      stanzas {
+        new {
+          fields {
+            new {
+              name = "Types"
+              value = "deb"
+              multiline = false
+            }
+            new {
+              name = "URIs"
+              value = "http://deb.debian.org/debian"
+              multiline = false
+            }
+            new {
+              name = "Suites"
+              value = "bookworm"
+              multiline = false
+            }
+            new {
+              name = "Components"
+              value = "main contrib non-free"
+              multiline = false
+            }
+          }
+        }
+        new {
+          fields {
+            new {
+              name = "Types"
+              value = "deb"
+              multiline = false
+            }
+            new {
+              name = "URIs"
+              value = "http://security.debian.org/debian-security"
+              multiline = false
+            }
+            new {
+              name = "Suites"
+              value = "bookworm-security"
+              multiline = false
+            }
+            new {
+              name = "Components"
+              value = "main contrib non-free"
+              multiline = false
+            }
+          }
+        }
+      }
+      headerComment = null
+      output {
+        text = """
+          Types: deb
+          URIs: http://deb.debian.org/debian
+          Suites: bookworm
+          Components: main contrib non-free
+          
+          Types: deb
+          URIs: http://security.debian.org/debian-security
+          Suites: bookworm-security
+          Components: main contrib non-free
+          
+          """
+      }
+    }
+  }
+  ["Document with header comment"] {
+    new {
+      stanzas {
+        new {
+          fields {
+            new {
+              name = "Types"
+              value = "deb"
+              multiline = false
+            }
+            new {
+              name = "URIs"
+              value = "http://deb.debian.org/debian"
+              multiline = false
+            }
+            new {
+              name = "Suites"
+              value = "bookworm"
+              multiline = false
+            }
+            new {
+              name = "Components"
+              value = "main"
+              multiline = false
+            }
+          }
+        }
+      }
+      headerComment = """
+        Debian Bookworm repository configuration
+        Generated by Pkl
+        """
+      output {
+        text = """
+          # Debian Bookworm repository configuration
+          # Generated by Pkl
+          
+          Types: deb
+          URIs: http://deb.debian.org/debian
+          Suites: bookworm
+          Components: main
+          
+          """
+      }
+    }
+  }
+}

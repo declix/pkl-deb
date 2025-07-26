@@ -1,5 +1,5 @@
 /// Example: Ubuntu with Docker repository
-amends "package://pkl.declix.org/pkl-deb@X.Y.Z#/SourcesList.pkl"
+amends "../SourcesList.pkl"
 
 entries = new Listing {
     // Ubuntu main repositories

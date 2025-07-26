@@ -1,0 +1,213 @@
+examples {
+  ["Simple Debian entry"] {
+    new {
+      types {
+        "deb"
+      }
+      uris {
+        "http://deb.debian.org/debian"
+      }
+      suites {
+        "bookworm"
+      }
+      components {
+        "main"
+        "contrib"
+        "non-free"
+      }
+      architectures = null
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = null
+      checkValidUntil = null
+      enabled = null
+      trusted = null
+      customFields = null
+    }
+  }
+  ["Ubuntu with architecture"] {
+    new {
+      types {
+        "deb"
+        "deb-src"
+      }
+      uris {
+        "http://archive.ubuntu.com/ubuntu"
+      }
+      suites {
+        "jammy"
+      }
+      components {
+        "main"
+        "restricted"
+        "universe"
+        "multiverse"
+      }
+      architectures {
+        "amd64"
+      }
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = null
+      checkValidUntil = null
+      enabled = null
+      trusted = null
+      customFields = null
+    }
+  }
+  ["Docker repository with signed-by"] {
+    new {
+      types {
+        "deb"
+      }
+      uris {
+        "https://download.docker.com/linux/debian"
+      }
+      suites {
+        "bookworm"
+      }
+      components {
+        "stable"
+      }
+      architectures {
+        "amd64"
+      }
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
+      checkValidUntil = null
+      enabled = null
+      trusted = false
+      customFields = null
+    }
+  }
+  ["Complete sources file output"] {
+    """
+    Types: deb
+    URIs: http://deb.debian.org/debian
+    Suites: bookworm
+    Components: main contrib non-free non-free-firmware
+    """
+  }
+  ["Disabled entry"] {
+    new {
+      types {
+        "deb"
+      }
+      uris {
+        "http://deb.debian.org/debian"
+      }
+      suites {
+        "bookworm-backports"
+      }
+      components {
+        "main"
+      }
+      architectures = null
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = null
+      checkValidUntil = null
+      enabled = false
+      trusted = null
+      customFields = null
+    }
+  }
+  ["Multi-URI and multi-suite"] {
+    new {
+      types {
+        "deb"
+      }
+      uris {
+        "http://deb.debian.org/debian"
+        "http://ftp.debian.org/debian"
+      }
+      suites {
+        "bookworm"
+        "bookworm-updates"
+      }
+      components {
+        "main"
+      }
+      architectures = null
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = null
+      checkValidUntil = null
+      enabled = null
+      trusted = null
+      customFields = null
+    }
+  }
+  ["With custom fields"] {
+    new {
+      types {
+        "deb"
+      }
+      uris {
+        "http://example.com/repo"
+      }
+      suites {
+        "stable"
+      }
+      components {
+        "main"
+      }
+      architectures = null
+      languages = null
+      targets = null
+      pdiffs = null
+      signedBy = null
+      checkValidUntil = null
+      enabled = null
+      trusted = null
+      customFields {
+        ["Priority"] = "500"
+        ["Description"] = "Custom repository"
+      }
+    }
+  }
+  ["Entry with all fields"] {
+    new {
+      types {
+        "deb"
+        "deb-src"
+      }
+      uris {
+        "http://deb.debian.org/debian"
+      }
+      suites {
+        "bookworm"
+      }
+      components {
+        "main"
+        "contrib"
+        "non-free"
+        "non-free-firmware"
+      }
+      architectures {
+        "amd64"
+        "arm64"
+      }
+      languages {
+        "en"
+        "de"
+      }
+      targets {
+        "Packages"
+        "Sources"
+      }
+      pdiffs = true
+      signedBy = "/usr/share/keyrings/debian-archive-keyring.gpg"
+      checkValidUntil = false
+      enabled = true
+      trusted = false
+      customFields = null
+    }
+  }
+}

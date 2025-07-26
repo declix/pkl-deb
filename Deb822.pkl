@@ -1,0 +1,99 @@
+/// Generic Pkl module for deb822 format rendering
+/// 
+/// This module provides utilities for creating deb822-formatted files,
+/// which are used by various Debian tools including APT sources files.
+/// 
+/// Reference: https://manpages.debian.org/bookworm/dpkg-dev/deb822.5.en.html
+module pkl.deb.Deb822
+
+/// A single field in deb822 format
+class Field {
+    /// Field name (case-insensitive but conventionally CamelCase)
+    name: String
+    
+    /// Field value (can be single or multi-line)
+    value: String
+    
+    /// Whether this is a multi-line field that preserves whitespace
+    multiline: Boolean = false
+    
+    /// Render field in deb822 format
+    function render(): String =
+        if (multiline) 
+            let (lines = value.split("\n"))
+            if (lines.length == 1) "\(name): \(value)"
+            else new Listing {
+                "\(name): \(lines.first)"
+                for (line in lines.drop(1)) {
+                    if (line.isEmpty) " ."
+                    else " \(line)"
+                }
+            }.join("\n")
+        else
+            // Handle continuation lines for long values by adding space prefix
+            let (wrapped = value.replaceAll("\n", "\n "))
+            "\(name): \(wrapped)"
+}
+
+/// A stanza (paragraph) in deb822 format - collection of fields
+class Stanza {
+    /// List of fields in this stanza
+    fields: Listing<Field>
+    
+    /// Render stanza as deb822 format
+    function render(): String = 
+        fields.toList().map((field) -> field.render()).join("\n")
+}
+
+/// Complete deb822 document - collection of stanzas
+class Document {
+    /// List of stanzas in the document
+    stanzas: Listing<Stanza>
+    
+    /// Optional header comment
+    headerComment: String?
+    
+    /// Render complete deb822 document
+    output {
+        text = 
+            let (headerLines = if (headerComment != null)
+                new Listing {
+                    for (line in headerComment!!.split("\n")) {
+                        "# \(line)"
+                    }
+                    ""
+                }
+            else new Listing {})
+            let (stanzaLines = stanzas.toList().map((stanza) -> stanza.render()))
+            let (allLines = new Listing {
+                ...headerLines
+                ...stanzaLines.join("\n\n").split("\n")
+            })
+            allLines.join("\n") + "\n"
+    }
+}
+
+/// Create a simple field
+function field(fieldName: String, fieldValue: String): Field = new Field {
+    name = fieldName
+    value = fieldValue
+}
+
+/// Create a boolean field (renders as yes/no)
+function booleanField(fieldName: String, fieldValue: Boolean): Field = new Field {
+    name = fieldName
+    value = if (fieldValue) "yes" else "no"
+}
+
+/// Create a list field (space-separated values)
+function listField(fieldName: String, values: Listing<String>): Field = new Field {
+    name = fieldName
+    value = values.join(" ")
+}
+
+/// Create a multi-line field
+function multilineField(fieldName: String, fieldValue: String): Field = new Field {
+    name = fieldName
+    value = fieldValue
+    multiline = true
+}

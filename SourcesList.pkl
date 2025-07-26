@@ -1,19 +1,17 @@
-/// Pkl module for generating Debian sources.list files
+/// Module for generating Debian sources.list files
 /// 
-/// This module provides types and utilities for creating valid Debian package
-/// repository configurations in sources.list format.
+/// This module can be amended to create sources.list file configurations.
+/// Set the entries property to define your repository entries.
 /// 
 /// Reference: https://manpages.debian.org/bookworm/apt/sources.list.5.en.html
 module pkl.deb.SourcesList
 
-/// Archive type for the repository
-typealias ArchiveType = "deb"|"deb-src"
+import "Types.pkl"
 
-/// Supported URI schemes  
-typealias UriScheme = "http"|"https"|"file"|"ftp"|"cdrom"|"copy"|"rsh"|"ssh"|"mirror"
-
-/// Common Debian components
-typealias Component = "main"|"contrib"|"non-free"|"non-free-firmware"|String
+/// Re-export common types for convenience
+typealias ArchiveType = Types.ArchiveType
+typealias UriScheme = Types.UriScheme
+typealias Component = Types.Component
 
 /// Options that can be specified for a repository entry
 class EntryOptions {
@@ -71,18 +69,14 @@ class Entry {
         "\(archiveType) \(optsStr)\(uri) \(suite) \(components.join(" "))"
 }
 
-/// Complete sources.list file configuration
-class SourcesList {
-    /// List of repository entries
-    entries: Listing<Entry>
-    
-    /// Render complete sources.list file content
-    output {
-        text = new Listing {
-            for (entry in entries) {
-                entry.render()
-            }
-        }.join("\n") + "\n"
-    }
-}
+/// List of repository entries
+entries: Listing<Entry> = new Listing {}
 
+/// Render complete sources.list file content
+output {
+    text = new Listing {
+        for (entry in entries) {
+            entry.render()
+        }
+    }.join("\n") + "\n"
+}

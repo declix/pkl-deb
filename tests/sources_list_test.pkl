@@ -1,4 +1,4 @@
-/// Comprehensive tests for SourcesList module
+/// Tests for SourcesList module functionality
 amends "pkl:test"
 
 import "../SourcesList.pkl"
@@ -25,7 +25,7 @@ examples {
     ["Source repository entry"] {
         new SourcesList.Entry {
             archiveType = "deb-src"
-            uri = "http://deb.debian.org/debian" 
+            uri = "http://deb.debian.org/debian"
             suite = "bookworm"
             components = new Listing { "main" }
         }
@@ -35,7 +35,7 @@ examples {
         new SourcesList.Entry {
             archiveType = "deb"
             options = new SourcesList.EntryOptions {
-                architectures = new Listing { "amd64"; "i386" }
+                architectures = new Listing { "amd64" }
             }
             uri = "http://deb.debian.org/debian"
             suite = "bookworm"
@@ -47,11 +47,11 @@ examples {
         new SourcesList.Entry {
             archiveType = "deb"
             options = new SourcesList.EntryOptions {
-                architectures = new Listing { "amd64" }
-                trusted = true
+                architectures = new Listing { "amd64"; "arm64" }
                 signedBy = "/usr/share/keyrings/example.gpg"
+                trusted = false
             }
-            uri = "http://example.com/debian"
+            uri = "https://example.com/debian"
             suite = "bookworm"
             components = new Listing { "main" }
         }
@@ -66,89 +66,6 @@ examples {
             uri = "http://deb.debian.org/debian"
             suite = "bookworm"
             components = new Listing { "main" }
-        }
-    }
-    
-    ["Basic Debian sources.list"] {
-        new SourcesList.SourcesList {
-            entries = new Listing {
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    uri = "http://deb.debian.org/debian"
-                    suite = "bookworm"
-                    components = new Listing { "main"; "contrib"; "non-free" }
-                }
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    uri = "http://deb.debian.org/debian"
-                    suite = "bookworm-updates"
-                    components = new Listing { "main"; "contrib"; "non-free" }
-                }
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    uri = "http://security.debian.org/debian-security"
-                    suite = "bookworm-security"
-                    components = new Listing { "main"; "contrib"; "non-free" }
-                }
-            }
-        }
-    }
-    
-    ["Ubuntu sources.list with options"] {
-        new SourcesList.SourcesList {
-            entries = new Listing {
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    options = new SourcesList.EntryOptions {
-                        architectures = new Listing { "amd64" }
-                    }
-                    uri = "http://archive.ubuntu.com/ubuntu"
-                    suite = "jammy"
-                    components = new Listing { "main"; "restricted" }
-                }
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    uri = "http://security.ubuntu.com/ubuntu"
-                    suite = "jammy-security"
-                    components = new Listing { "main"; "restricted" }
-                }
-            }
-        }
-    }
-    
-    ["Mixed source and binary repositories"] {
-        new SourcesList.SourcesList {
-            entries = new Listing {
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    uri = "http://deb.debian.org/debian"
-                    suite = "sid"
-                    components = new Listing { "main"; "contrib"; "non-free" }
-                }
-                new SourcesList.Entry {
-                    archiveType = "deb-src"
-                    uri = "http://deb.debian.org/debian"
-                    suite = "sid"
-                    components = new Listing { "main"; "contrib"; "non-free" }
-                }
-            }
-        }
-    }
-    
-    ["Docker repository with signing key"] {
-        new SourcesList.SourcesList {
-            entries = new Listing {
-                new SourcesList.Entry {
-                    archiveType = "deb"
-                    options = new SourcesList.EntryOptions {
-                        architectures = new Listing { "amd64" }
-                        signedBy = "/usr/share/keyrings/docker-archive-keyring.gpg"
-                    }
-                    uri = "https://download.docker.com/linux/debian"
-                    suite = "bookworm"
-                    components = new Listing { "stable" }
-                }
-            }
         }
     }
 }

@@ -1,0 +1,11 @@
+/// Common type definitions for pkl-deb modules
+module pkl.deb.Types
+
+/// Archive type for the repository
+typealias ArchiveType = "deb"|"deb-src"
+
+/// Supported URI schemes  
+typealias UriScheme = "http"|"https"|"file"|"ftp"|"cdrom"|"copy"|"rsh"|"ssh"|"mirror"
+
+/// Common Debian components
+typealias Component = "main"|"contrib"|"non-free"|"non-free-firmware"|String

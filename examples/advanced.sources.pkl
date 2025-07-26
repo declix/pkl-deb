@@ -1,0 +1,46 @@
+/// Example: Advanced .sources configuration with all options
+amends "../Sources.pkl"
+
+headerComment = "Advanced repository configuration\nwith multiple options and features"
+
+entries = new Listing {
+    // Multi-architecture Debian repository
+    new Entry {
+        types = new Listing { "deb"; "deb-src" }
+        uris = new Listing { 
+            "http://deb.debian.org/debian"
+            "http://ftp.debian.org/debian"  // Mirror fallback
+        }
+        suites = new Listing { "bookworm" }
+        components = new Listing { "main"; "contrib"; "non-free"; "non-free-firmware" }
+        architectures = new Listing { "amd64"; "arm64" }
+        languages = new Listing { "en"; "de"; "fr" }
+        targets = new Listing { "Packages"; "Sources"; "Translation-en" }
+        pdiffs = true
+        checkValidUntil = true
+    }
+    
+    // Third-party repository with strict verification
+    new Entry {
+        uris = new Listing { "https://packages.example.com/debian" }
+        suites = new Listing { "stable" }
+        components = new Listing { "main" }
+        architectures = new Listing { "amd64" }
+        signedBy = "/usr/share/keyrings/example-archive-keyring.gpg"
+        trusted = false
+        pdiffs = false
+        customFields = new Mapping {
+            ["Priority"] = "500"
+            ["Description"] = "Example third-party repository"
+        }
+    }
+    
+    // Local repository (trusted without signature)
+    new Entry {
+        uris = new Listing { "file:///var/cache/apt/archives" }
+        suites = new Listing { "local" }
+        components = new Listing { "main" }
+        trusted = true
+        targets = new Listing { "Packages" }
+    }
+}
